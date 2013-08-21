@@ -39,3 +39,21 @@ if (defined('CAT_PATH')) {
     if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
 }
 
+// add files to class_secure
+$addons_helper = CAT_Helper_Addons::getInstance();
+if ( false === $addons_helper->sec_register_file( 'tinymce', '/tinymce/filemanager/elfinder/php/connector.php' ) )
+{
+     error_log( "Unable to register file -connector.php-!" );
+}
+if ( false === $addons_helper->sec_register_file( 'tinymce', '/tinymce/plugins/filemanager/config/config.php' ) )
+{
+     error_log( "Unable to register file -config.php-!" );
+}
+if ( false === $addons_helper->sec_register_file( 'tinymce', '/tinymce/plugins/filemanager/dialog.php' ) )
+{
+     error_log( "Unable to register file -dialog.php-!" );
+}
+if ( false === $addons_helper->sec_register_file( 'tinymce', '/tinymce/plugins/filemanager/upload.php' ) )
+{
+     error_log( "Unable to register file -upload.php-!" );
+}

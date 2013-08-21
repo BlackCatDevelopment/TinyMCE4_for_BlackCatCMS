@@ -80,8 +80,11 @@ final class c_editor extends c_editor_base
 
     public function getAdditionalPlugins()
     {
+        $defaults = array( 'emoticons', 'filemanager', 'image', 'link', 'media', 'visualblocks' );
         $path     = $this->getPluginsPath();
-        $plugins  = CAT_Helper_Directory::getInstance()->setRecursion(false)->getDirectories( $path, $path.'/' );
+        $subs     = CAT_Helper_Directory::getInstance()->setRecursion(false)->getDirectories( $path, $path.'/' );
+        // remove defaults from subs
+        $plugins  = array_diff($subs,$defaults);
         if(count($plugins)) return $plugins;
         return array();
     }
