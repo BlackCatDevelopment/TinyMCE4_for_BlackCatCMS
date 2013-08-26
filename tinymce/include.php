@@ -142,15 +142,15 @@ function gettinytoolbar($name) {
     $toolbars = array(
         'Full' => array(
 			"undo,redo,|,formatselect,fontselect,fontsizeselect,styleselect,|,help,code,|,fullscreen,|,inserttime,preview",
-			"bold,italic,underline,strikethrough,|,subscript,superscript,|,alignleft,aligncenter,alignright,alignjustify,|,outdent,indent,blockquote,|,forecolor,backcolor,|,bullist,numlist,|,link,unlink,anchor,image,droplets",
+			"bold,italic,underline,strikethrough,|,subscript,superscript,|,alignleft,aligncenter,alignright,alignjustify,|,outdent,indent,blockquote,|,forecolor,backcolor,|,bullist,numlist,|,link,unlink,anchor,cmsplink,image,|,droplets",
 			"hr,removeformat,|,cut,copy,paste,pastetext,searchreplace,|,charmap,emoticons,spellchecker,media,|,print,|,ltr,rtl,|,visualchars,nonbreaking,template,pagebreak,|,filemanager",
 		),
         'Smart' => array(
 			"undo,redo,|,formatselect,fontselect,fontsizeselect,styleselect,|,help,code,|,fullscreen",
-			"bold,italic,underline,strikethrough,|,subscript,superscript,|,alignleft,aligncenter,alignright,alignjustify,|,outdent,indent,blockquote,|,forecolor,backcolor,|,bullist,numlist,|,link,unlink,anchor,image,pagelink",
+			"bold,italic,underline,strikethrough,|,subscript,superscript,|,alignleft,aligncenter,alignright,alignjustify,|,outdent,indent,blockquote,|,forecolor,backcolor,|,bullist,numlist,|,link,unlink,anchor,cmsplink,image",
 		),
 	    'Simple' => array(
-			"bold,italic,underline,strikethrough,|,subscript,superscript,|,alignleft,aligncenter,alignright,alignjustify,|,outdent,indent,blockquote,|,forecolor,backcolor,|,bullist,numlist,|,link,unlink,anchor,image,pagelink",
+			"bold,italic,underline,strikethrough,|,subscript,superscript,|,alignleft,aligncenter,alignright,alignjustify,|,outdent,indent,blockquote,|,forecolor,backcolor,|,bullist,numlist,|,link,unlink,anchor,cmsplink,image",
 		)
     );
     return $toolbars[$name];
