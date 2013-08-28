@@ -14,7 +14,7 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- *   @author          Administrator
+ *   @author          Black Cat Development
  *   @copyright       2013, Black Cat Development
  *   @link            http://blackcat-cms.org
  *   @license         http://www.gnu.org/licenses/gpl.html
@@ -44,8 +44,8 @@ $module_directory = "tinymce";
 $module_type = "module";
 $module_function = "wysiwyg";
 $module_description = "TinyMCE WYSIWYG Editor for BlackCat CMS";
-$module_version = "0.1";
+$module_version = "0.3";
 $module_platform = "1.x";
-$module_author = "Administrator";
+$module_author = "Black Cat Development";
 $module_guid = "D8035B54-D934-586B-CA26-E77817413370";
 $module_license = "GNU General Public License";

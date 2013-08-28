@@ -2,7 +2,7 @@
 <script>
     tinymce.init({
         selector: "textarea#{$id}"
-        ,language: 'de'
+        ,language: '{lower($LANGUAGE)}'
         ,rel_list: [
         					{ text: "Fancybox",	value: "fancybox" },
         					{ text: "Lightbox",	value: "lightbox" },
@@ -19,7 +19,7 @@
         ,plugins: [
              "advlist charmap directionality fullscreen insertdatetime lists noneditable preview searchreplace table visualchars"
             ,"anchor autosave code emoticons hr legacyoutput media pagebreak print spellchecker template wordcount"
-            ,"autolink bbcode contextmenu fullpage image link nonbreaking paste save tabfocus visualblocks textcolor cmsplink droplets"
+            ,"autolink contextmenu fullpage image link nonbreaking paste save tabfocus visualblocks textcolor cmsplink droplets"
             {if isset($plugins)},"{$plugins}"{/if}
         ]
         ,image_advtab: true

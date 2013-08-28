@@ -113,6 +113,7 @@ function show_wysiwyg_editor($name, $id, $content, $width = '100%', $height = '2
 
     global $parser;
     $parser->setPath(realpath(dirname(__FILE__).'/templates/default'));
+    $parser->setGlobals('LANGUAGE',LANGUAGE);
     $output = $parser->get(
         'wysiwyg',
         array(

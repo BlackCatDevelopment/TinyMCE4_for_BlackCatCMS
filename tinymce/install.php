@@ -57,3 +57,7 @@ if ( false === $addons_helper->sec_register_file( 'tinymce', '/tinymce/plugins/f
 {
      error_log( "Unable to register file -upload.php-!" );
 }
+if ( false === $addons_helper->sec_register_file( 'tinymce', '/tinymce/plugins/cmsplink/cmsplink.php' ) )
+{
+     error_log( "Unable to register file -cmsplink.php-!" );
+}
