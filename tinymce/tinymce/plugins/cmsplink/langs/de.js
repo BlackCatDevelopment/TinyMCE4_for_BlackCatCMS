@@ -1,4 +1,4 @@
-tinymce.addI18n('de.cmsplink',{
+tinymce.addI18n('de',{
     'Insert internal link': 'Internen Link einf\u00fcgen',
 	'CSS-Class': 'CSS-Klasse',
     'Advisory Relation': 'Relation',

@@ -14,29 +14,29 @@
  *   You should have received a copy of the GNU General Public License
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
- *   @author          Administrator
- *   @copyright       2013, Black Cat Development
+ *   @author          Black Cat Development
+ *   @copyright       2015, Black Cat Development
  *   @link            http://blackcat-cms.org
  *   @license         http://www.gnu.org/licenses/gpl.html
- *   @category        CAT_Modules
- *   @package         TinyMCE
+ *   @category        CAT_Core
+ *   @package         CAT_Core
  *
  */
 
 if (defined('CAT_PATH')) {
-    if (defined('CAT_VERSION')) include(CAT_PATH.'/framework/class.secure.php');
-} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
-    include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php');
+	include(CAT_PATH.'/framework/class.secure.php');
 } else {
-    $subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));    $dir = $_SERVER['DOCUMENT_ROOT'];
-    $inc = false;
-    foreach ($subs as $sub) {
-        if (empty($sub)) continue; $dir .= '/'.$sub;
-        if (file_exists($dir.'/framework/class.secure.php')) {
-            include($dir.'/framework/class.secure.php'); $inc = true;    break;
-        }
-    }
-    if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+	$root = "../";
+	$level = 1;
+	while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+		$root .= "../";
+		$level += 1;
+	}
+	if (file_exists($root.'/framework/class.secure.php')) {
+		include($root.'/framework/class.secure.php');
+	} else {
+		trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+	}
 }
 
 $debug = false;
@@ -55,17 +55,17 @@ final class c_editor extends c_editor_base
 
     public function getFilemanagerPath()
     {
-        return sanitize_path(realpath(dirname(__FILE__).'/tinymce/filemanager'));
+        return CAT_Helper_Directory::sanitizePath(realpath(dirname(__FILE__).'/tinymce/filemanager'));
     }
 
     public function getSkinPath()
     {
-        return sanitize_path(realpath(dirname(__FILE__).'/tinymce/skins'));
+        return CAT_Helper_Directory::sanitizePath(realpath(dirname(__FILE__).'/tinymce/skins'));
     }
 
     public function getPluginsPath()
     {
-        return sanitize_path(realpath(dirname(__FILE__).'/tinymce/plugins'));
+        return CAT_Helper_Directory::sanitizePath(realpath(dirname(__FILE__).'/tinymce/plugins'));
     }
 
     public function getToolbars()
@@ -80,12 +80,25 @@ final class c_editor extends c_editor_base
 
     public function getAdditionalPlugins()
     {
-        $defaults = array( 'emoticons', 'filemanager', 'image', 'link', 'media', 'visualblocks' );
+        $defaults = array(
+            'advlist', 'anchor', 'autolink', 'autoresize', 'autosave', 'bbcode', 'charmap', 'cmsplink', 'code', 'colorpicker',
+            'contextmenu', 'directionality', 'droplets', 'emoticons', 'example', 'example_dependency',
+            'filemanager', 'fullpage', 'fullscreen', 'hr', 'image', 'imagetools', 'importcss', 'insertdatetime',
+            'layer', 'legacyoutput', 'link', 'lists', 'media', 'nonbreaking', 'noneditable',
+            'pagebreak', 'paste', 'preview', 'print', 'save', 'searchreplace', 'spellchecker',
+            'tabfocus', 'table', 'template', 'textcolor', 'textpattern',
+            'visualblocks', 'visualchars', 'wordcount', 
+        );
         $path     = $this->getPluginsPath();
         $subs     = CAT_Helper_Directory::getInstance()->setRecursion(false)->getDirectories( $path, $path.'/' );
         // remove defaults from subs
         $plugins  = array_diff($subs,$defaults);
         if(count($plugins)) return $plugins;
+        return array();
+    }
+
+    public function getFrontendCSS()
+    {
         return array();
     }
 

@@ -15,7 +15,7 @@
  *   along with this program; if not, see <http://www.gnu.org/licenses/>.
  *
  *   @author          Black Cat Development
- *   @copyright       2013, Black Cat Development
+ *   @copyright       2015, Black Cat Development
  *   @link            http://blackcat-cms.org
  *   @license         http://www.gnu.org/licenses/gpl.html
  *   @category        CAT_Modules
@@ -24,19 +24,19 @@
  */
 
 if (defined('CAT_PATH')) {
-    if (defined('CAT_VERSION')) include(CAT_PATH.'/framework/class.secure.php');
-} elseif (file_exists($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php')) {
-    include($_SERVER['DOCUMENT_ROOT'].'/framework/class.secure.php');
+	include(CAT_PATH.'/framework/class.secure.php');
 } else {
-    $subs = explode('/', dirname($_SERVER['SCRIPT_NAME']));    $dir = $_SERVER['DOCUMENT_ROOT'];
-    $inc = false;
-    foreach ($subs as $sub) {
-        if (empty($sub)) continue; $dir .= '/'.$sub;
-        if (file_exists($dir.'/framework/class.secure.php')) {
-            include($dir.'/framework/class.secure.php'); $inc = true;    break;
-        }
-    }
-    if (!$inc) trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+	$root = "../";
+	$level = 1;
+	while (($level < 10) && (!file_exists($root.'/framework/class.secure.php'))) {
+		$root .= "../";
+		$level += 1;
+	}
+	if (file_exists($root.'/framework/class.secure.php')) {
+		include($root.'/framework/class.secure.php');
+	} else {
+		trigger_error(sprintf("[ <b>%s</b> ] Can't include class.secure.php!", $_SERVER['SCRIPT_NAME']), E_USER_ERROR);
+	}
 }
 
 include_once dirname(__FILE__).DIRECTORY_SEPARATOR.'elFinderConnector.class.php';
@@ -48,28 +48,43 @@ if(!defined('CAT_PATH'))
     require dirname(__FILE__).'/../../../../../../../../config.php';
 
 /**
- * Simple function to demonstrate how to control file access using "accessControl" callback.
- * This method will disable accessing files/folders starting from  '.' (dot)
+ * check user permissions
  *
  * @param  string  $attr  attribute name (read|write|locked|hidden)
  * @param  string  $path  file path relative to volume root directory started with directory separator
  * @return bool|null
  **/
-function access($attr, $path, $data, $volume) {
-	return strpos(basename($path), '.') === 0       // if file/folder begins with '.' (dot)
-		? !($attr == 'read' || $attr == 'write')    // set read+write to false, other (locked+hidden) set to true
-		:  null;                                    // else elFinder decide it itself
+function access($attr, $path, $data, $volume)
+{
+    $backend = CAT_Backend::getInstance('media','media',false,false);
+    $user    = CAT_Users::getInstance();
+    if(($user->get_permission('media_view') === true)) // user can view media
+    {
+        // always hide files and folders beginning with a dot
+        if(strpos(basename($path), '.') === 0) return NULL;
+        // if user can view and attr is read return true
+        if($attr == 'read') return true;
+        // if attr is write and user can write...
+        // note: we cannot distinguish upload / create (folder) with elFinder!
+        if($attr == 'write')
+        {
+            return
+                ( $user->get_permission('media_upload') === true
+                  || $user->get_permission('media_create') === true )
+                ;
+        }
+    }
+    return NULL; // default = denied
 }
 
-
-$val  = CAT_Helper_Validate::getInstance();
-$path = sanitize_path(CAT_PATH.MEDIA_DIRECTORY);
-$url  = sanitize_url(CAT_URL.MEDIA_DIRECTORY);
+$val     = CAT_Helper_Validate::getInstance();
+$path    = CAT_Helper_Directory::sanitizePath(CAT_PATH.MEDIA_DIRECTORY);
+$url     = CAT_Helper_Validate::sanitize_url(CAT_URL.MEDIA_DIRECTORY);
 
 if($val->fromSession('HOME_FOLDER') && file_exists(CAT_PATH.MEDIA_DIRECTORY.$val->fromSession('HOME_FOLDER')))
 {
-   $path = sanitize_path(CAT_PATH.MEDIA_DIRECTORY.$val->fromSession('HOME_FOLDER'));
-   $url  = sanitize_url(CAT_URL.MEDIA_DIRECTORY.$val->fromSession('HOME_FOLDER'));
+   $path = CAT_Helper_Directory::sanitizePath(CAT_PATH.MEDIA_DIRECTORY.$val->fromSession('HOME_FOLDER'));
+   $url  = CAT_Helper_Validate::sanitize_url(CAT_URL.MEDIA_DIRECTORY.$val->fromSession('HOME_FOLDER'));
 }
 
 $opts = array(
@@ -82,15 +97,15 @@ $opts = array(
 			'URL'           => $url,                // URL to files (REQUIRED)
 			'accessControl' => 'access',            // disable and hide dot starting files (OPTIONAL)
   	        'acceptedName'  => '/^[^\.].*$/',       // deny dot starting files
-            'defaults'      => array( 'read' => true, 'write' => true ),
+            'defaults'      => array( 'read' => false, 'write' => false ),
             'attributes'    => array(
                 array(  // show directories
                     'pattern' => '~^[/\\\]~',
                     'hidden' => false,
                 ),
-                array( // hide any files
+                array( // hide any files by default; only show files that match the current type
                     'pattern' => '~\..*$~',
-                    //'hidden' => true,
+                    'hidden' => true,
                     'locked' => true,
                     'read' => false,
                     'write' => false,
@@ -113,18 +128,17 @@ if($val->sanitizeGet('mode'))
                     'pattern' => '~\.(png|jpe?g|gif|bmp)$~',
                     'hidden' => false,
                     'locked' => false,
-                    'read' => true,
-                    'write' => true,
                 )
             );
             $opts['roots'][0]['uploadAllow'] = array('image');
             break;
-        case 'flash':
+        case 'media':
             array_push( // show flash only
                 $opts['roots'][0]['attributes'],
                 array(
-        			'pattern' => '/\.(swf|fla)$/',   // allow flash
+        			'pattern' => '/\.(mp3|wav|mp4|webm|ogg|swf)$/',   // what the media plugin allows
         			'hidden' => false,
+                    'locked' => false,
         		)
             );
             break;

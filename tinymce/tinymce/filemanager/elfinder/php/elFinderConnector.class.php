@@ -90,7 +90,7 @@ class elFinderConnector {
 		
 		$args['debug'] = isset($src['debug']) ? !!$src['debug'] : false;
 		
-		$this->output($this->elFinder->exec($cmd, $args));
+		$this->output($this->elFinder->exec($cmd, $this->input_filter($args)));
 	}
 	
 	/**
@@ -124,10 +124,41 @@ class elFinderConnector {
 			if (!empty($data['raw']) && !empty($data['error'])) {
 				exit($data['error']);
 			} else {
+                $this->array_walk_deep($data);
 				exit(json_encode($data));
 			}
 		}
 		
 	}
+
+    protected function array_walk_deep(&$items) {
+        foreach ($items as &$item) {
+            if(is_array($item)) {
+                $this->array_walk_deep($item);
+            } else {
+                $item = utf8_encode($item);
+            }
+        }
+    }
 	
+	/**
+	 * Remove null & stripslashes applies on "magic_quotes_gpc"
+	 * 
+	 * @param  mixed  $args
+	 * @return mixed
+	 * @author Naoki Sawada
+	 */
+	private function input_filter($args) {
+		static $magic_quotes_gpc = NULL;
+		
+		if ($magic_quotes_gpc === NULL)
+			$magic_quotes_gpc = (version_compare(PHP_VERSION, '5.4', '<') && get_magic_quotes_gpc());
+		
+		if (is_array($args)) {
+			return array_map(array(& $this, 'input_filter'), $args);
+		}
+		$res = str_replace("\0", '', $args);
+		$magic_quotes_gpc && ($res = stripslashes($res));
+		return $res;
+	}
 }// END class 

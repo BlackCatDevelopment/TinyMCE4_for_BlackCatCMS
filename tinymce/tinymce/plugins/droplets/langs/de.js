@@ -1,4 +1,4 @@
-tinymce.addI18n('de.droplets',{
-	desc : 'Droplets einf\u00fcgen',
-	title: "Droplets",
+tinymce.addI18n('de',{
+    'Insert Droplet': 'Droplet einf\u00fcgen',
+    'Comment': 'Kommentar'
 });
