@@ -45,19 +45,11 @@ if ( false === $addons_helper->sec_register_file( 'tinymce', '/tinymce/filemanag
 {
      error_log( "Unable to register file -connector.php-!" );
 }
-if ( false === $addons_helper->sec_register_file( 'tinymce', '/tinymce/plugins/filemanager/config/config.php' ) )
-{
-     error_log( "Unable to register file -config.php-!" );
-}
-if ( false === $addons_helper->sec_register_file( 'tinymce', '/tinymce/plugins/filemanager/dialog.php' ) )
-{
-     error_log( "Unable to register file -dialog.php-!" );
-}
-if ( false === $addons_helper->sec_register_file( 'tinymce', '/tinymce/plugins/filemanager/upload.php' ) )
-{
-     error_log( "Unable to register file -upload.php-!" );
-}
 if ( false === $addons_helper->sec_register_file( 'tinymce', '/tinymce/plugins/cmsplink/cmsplink.php' ) )
 {
      error_log( "Unable to register file -cmsplink.php-!" );
+}
+if ( false === $addons_helper->sec_register_file( 'tinymce', '/tinymce/plugins/droplets/droplets.php' ) )
+{
+     error_log( "Unable to register file -droplets.php-!" );
 }
